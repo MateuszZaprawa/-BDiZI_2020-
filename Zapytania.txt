@@ -1,0 +1,84 @@
+SELECT id_pacjenta, pesel, imie, nazwisko FROM pacjent 
+SELECT id_skierowanie, pacjent, lekarz_wystawiajacy FROM skierowanie
+SELECT id_zabiegu, opis_zabiegu FROM zabieg
+SELECT id_badania, wyniki FROM badanie
+SELECT id_karty, pacjent FROM karta_pacjenta
+SELECT id_leczenia, diagnoza, data_wizyty FROM leczenie 
+SELECT nazwisko, specjalizacja FROM lekarz
+SELECT id_leku, nazwa FROM leki
+SELECT id_recepty, pacjent FROM recepta
+SELECT id_skierowania, pacjent, cel_skierowania FROM skierowanie
+
+SELECT * FROM pacjent WHERE pesel LIKE "9710125869"
+SELECT * FROM pacjent WHERE miejscowosc LIKE "Lublin"
+SELECT * FROM leki WHERE substancja_czynna LIKE "Estitalopram"
+SELECT * FROM skierowanie ORDER BY data_wystawienia DESC
+SELECT * FROM leczenie ORDER BY data_wizyty DESC
+SELECT * FROM badanie WHERE osoba_wykonujaca LIKE "93009"
+SELECT wyniki, data_wykonania FROM badanie WHERE skierowanie LIKE "98002"
+SELECT * FROM LECZENIE WHERE lekarz_prowadzacy LIKE "93004" AND ORDER BY data_wizyty DESC
+SELECT * FROM `karta pacjenta` WHERE pacjent LIKE "102" AND poradnia LIKE "87016"
+SELECT * FROM lekarz WHERE specjalizacja LIKE "87000"
+
+SELECT pacjent.id_pacjenta, pacjent.imie, pacjent.nazwisko, pacjent.pesel, `karta pacjenta`.id_karty 
+FROM pacjent, `karta pacjenta` WHERE pacjent.id_pacjenta = `karta pacjenta`.pacjent
+
+SELECT lekarz.id_lekarza, lekarz.imie, lekarz.nazwisko, skierowanie.id_skierowania, skierowanie.pacjent 
+FROM skierowanie, lekarz WHERE skierowanie.pacjent LIKE "108" AND lekarz.id_lekarza = skierowanie.lekarz_wystawiajacy
+   
+SELECT lekarz.id_lekarza, lekarz.imie, lekarz.nazwisko, skierowanie.id_skierowania, skierowanie.pacjent 
+FROM skierowanie, lekarz WHERE lekarz.id_lekarza LIKE "93012" AND lekarz.id_lekarza = skierowanie.lekarz_wystawiajacy
+ 
+SELECT lekarz.id_lekarza, lekarz.nazwisko, zabieg.id_zabiegu, zabieg.opis_zabiegu FROM zabieg, lekarz 
+WHERE lekarz.id_lekarza LIKE "93016" AND lekarz.id_lekarza = zabieg.lekarz_wykonujacy
+
+SELECT lekarz.id_lekarza, lekarz.nazwisko, badanie.id_badania, badanie.wyniki FROM badanie, lekarz
+WHERE lekarz.id_lekarza LIKE "93008" AND lekarz.id_lekarza = badanie.osoba_wykonujaca
+
+SELECT pacjent.id_pacjenta, pacjent.imie, recepta.id_recepty, recepta.lek FROM pacjent, recepta 
+WHERE pacjent.id_pacjenta = recepta.pacjent
+
+SELECT skierowanie.id_skierowania, pacjent.id_pacjenta, pacjent.nazwisko FROM skierowanie, pacjent 
+WHERE pacjent.id_pacjenta LIKE "102" AND skierowanie.pacjent = pacjent.id_pacjenta 
+
+SELECT `karta pacjenta`.`id_karty`, leczenie.id_leczenia , leczenie.diagnoza FROM `karta pacjenta`, leczenie 
+WHERE leczenie.id_leczenia = `karta pacjenta`.`leczenie`
+
+SELECT recepta.id_recepty, lekarz.id_lekarza, lekarz.nazwisko, recepta.data_wystawienia FROM recepta, lekarz 
+WHERE lekarz.id_lekarza = recepta.lekarz_wystawiajacy ORDER BY recepta.data_wystawienia DESC
+
+SELECT leczenie.id_leczenia, badanie.wyniki FROM leczenie, badanie 
+WHERE badanie.id_badania != "22999" AND leczenie.`ew.badania` = badanie.id_badania
+
+
+
+SELECT pacjent.id_pacjenta, pacjent.nazwisko, skierowanie.id_skierowania, skierowanie.cel_skierowania, recepta.id_recepty, recepta.lek 
+FROM recepta, pacjent, skierowanie WHERE pacjent.id_pacjenta = skierowanie.pacjent AND pacjent.id_pacjenta = recepta.pacjent
+
+SELECT leczenie.id_leczenia, pacjent.id_pacjenta, pacjent.pesel, pacjent.nazwisko, lekarz.id_lekarza, lekarz.nazwisko FROM leczenie, pacjent, lekarz 
+WHERE pacjent.id_pacjenta LIKE "100" AND lekarz.id_lekarza = leczenie.lekarz_prowadzacy
+
+SELECT recepta.id_recepty, lekarz.id_lekarza, lekarz.nazwisko, pacjent.id_pacjenta, pacjent.pesel FROM recepta, lekarz, pacjent 
+WHERE lekarz.id_lekarza = recepta.lekarz_wystawiajacy AND pacjent.id_pacjenta = recepta.pacjent
+
+SELECT `karta pacjenta`.id_karty, pacjent.pesel, specjalizacja.specjalizacja FROM specjalizacja, `karta pacjenta`, pacjent 
+WHERE `karta pacjenta`.`pacjent`= pacjent.id_pacjenta AND `karta pacjenta`.poradnia = specjalizacja.id_specjalizacji
+
+SELECT recepta.id_recepty, leki.substancja_czynna, leki.nazwa, lekarz.id_lekarza, lekarz.nazwisko 
+FROM recepta, leki, lekarz WHERE recepta.lek = leki.id_leku AND recepta.lekarz_wystawiajacy = lekarz.id_lekarza
+
+SELECT skierowanie.id_skierowania, specjalizacja.specjalizacja, lekarz.nazwisko, lekarz.id_lekarza FROM skierowanie,specjalizacja, lekarz 
+WHERE skierowanie.lekarz_wystawiajacy = lekarz.id_lekarza AND skierowanie.skierowanie_do = specjalizacja.id_specjalizacji 
+AND lekarz.specjalizacja = specjalizacja.id_specjalizacji
+
+SELECT personel.id_pracownika, zabieg.id_zabiegu, lekarz.nazwisko, lekarz.id_lekarza FROM personel, zabieg, lekarz 
+WHERE personel.id_pracownika = zabieg.personel_asystujacy AND zabieg.lekarz_wykonujacy = lekarz.id_lekarza
+
+SELECT badanie.data_wynikow, skierowanie.data_wystawienia, lekarz.id_lekarza, lekarz.nazwisko FROM badanie, skierowanie, lekarz 
+WHERE badanie.osoba_wykonujaca = lekarz.id_lekarza AND badanie.skierowanie = skierowanie.id_skierowania AND skierowanie.lekarz_wystawiajacy = lekarz.id_lekarza
+
+SELECT `karta pacjenta`.id_karty, `karta pacjenta`.pacjent, specjalizacja.specjalizacja, leki.stosowana_w FROM `karta pacjenta`, specjalizacja, leki 
+WHERE `karta pacjenta`.poradnia = specjalizacja.id_specjalizacji AND leki.stosowana_w = specjalizacja.id_specjalizacji
+
+SELECT recepta.id_recepty, lekarz.id_lekarza, lekarz.nazwisko, pacjent.id_pacjenta, pacjent.pesel FROM recepta, lekarz, pacjent WHERE pacjent.id_pacjenta LIKE "107" 
+AND lekarz.id_lekarza = recepta.lekarz_wystawiajacy AND pacjent.id_pacjenta = recepta.pacjent
